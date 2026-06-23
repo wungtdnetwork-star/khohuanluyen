@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Kho Huấn Luyện Của Đại Đội 17</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #161616; color: #e0e0e0; }
+        .wrapper { display: flex; align-items: stretch; }
+        #sidebar { min-width: 270px; max-width: 270px; background: #0c0c0c; color: #bcaaa4; min-height: 100vh; transition: all 0.3s; border-right: 1px solid #c5a85c30; }
+        .sidebar-brand { padding: 25px 15px; text-align: center; border-bottom: 1px solid #c5a85c20; background: #050505; }
+        .sidebar-brand h5 { color: #c5a85c; font-size: 14px; font-weight: bold; letter-spacing: 1.5px; margin-top: 15px; text-transform: uppercase; }
+        
+        /* Hiệu ứng đổ bóng phát sáng tinh tế cho tệp ảnh logo.png */
+        .gold-svg-container {
+            filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.7)) drop-shadow(0px 0px 5px rgba(197, 168, 92, 0.4));
+            transition: all 0.3s ease;
+        }
+        .sidebar-brand:hover .gold-svg-container {
+            filter: drop-shadow(0px 5px 12px rgba(0, 0, 0, 0.8)) drop-shadow(0px 0px 12px rgba(245, 215, 127, 0.6));
+        }
+
+        #sidebar ul.components { padding: 20px 0; }
+        #sidebar ul li a { padding: 14px 22px; font-size: 15px; display: block; color: #aaaaaa; text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
+        #sidebar ul li a:hover, #sidebar ul li.active > a { 
+            color: #111; 
+            background: linear-gradient(90deg, #f5d77f, #c5a85c); 
+            font-weight: 600; 
+            box-shadow: 0 4px 12px rgba(197, 168, 92, 0.2);
+            border-left: 3px solid #fff;
+        }
+        #sidebar ul li a i { margin-right: 12px; width: 20px; text-align: center; color: #c5a85c; }
+        #sidebar ul li a:hover i, #sidebar ul li.active > a i { color: #111; }
+        
+        #content { width: 100%; padding: 30px; min-height: 100vh; background: #131313; }
+        .main-header { background: #0c0c0c; padding: 22px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #c5a85c20; display: flex; justify-content: space-between; align-items: center; }
+        .main-header h2 { font-size: 22px; margin: 0; color: #c5a85c; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Tỷ lệ 4:3 chuẩn cho ảnh 2304x1728 */
+        .photo-box { background: #0c0c0c; border: 1px solid #c5a85c40; border-radius: 8px; padding: 12px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); max-width: 520px; margin-left: auto; margin-right: auto; }
+        .photo-container { position: relative; width: 100%; padding-top: 75%; overflow: hidden; border-radius: 6px; border: 1px solid #222; background-color: #111; }
+        .photo-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .photo-caption { background: #050505; border-top: 1px solid #c5a85c25; padding: 10px 15px; color: #f5d77f; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 0 0 6px 6px; }
+        .photo-caption i { margin-right: 8px; color: #c5a85c; }
+
+        .box { background: #0c0c0c; border: 1px solid #c5a85c40; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        .box-header { font-size: 16px; font-weight: bold; color: #c5a85c; border-bottom: 1px solid #c5a85c20; padding-bottom: 12px; margin-bottom: 22px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control { background-color: #161616 !important; border: 1px solid #333333 !important; color: #ffffff !important; height: 45px; border-radius: 6px; }
+        .form-control:focus { border-color: #c5a85c !important; box-shadow: 0 0 0 0.2rem rgba(197, 168, 92, 0.15) !important; }
+
+        .btn-gold { background: linear-gradient(135deg, #f5d77f, #c5a85c); color: #111 !important; font-weight: bold; border: none; transition: all 0.3s; height: 45px; border-radius: 6px; }
+        .btn-gold:hover { background: linear-gradient(135deg, #c5a85c, #a3853c); box-shadow: 0 4px 12px rgba(197, 168, 92, 0.3); transform: translateY(-1px); }
+        .btn-outline-gold { background: transparent; color: #c5a85c; border: 1px solid #c5a85c; font-weight: bold; border-radius: 6px; transition: all 0.2s; }
+        .btn-outline-gold:hover { background: linear-gradient(135deg, #f5d77f, #c5a85c); color: #111; }
+        .btn-danger-custom { background-color: #2a1414; border: 1px solid #ff4d4f; color: #ff999a; border-radius: 4px; transition: all 0.2s; }
+        .btn-danger-custom:hover { background-color: #ff4d4f; color: #fff; }
+        
+        .table { color: #dddddd; margin-bottom: 0; }
+        .table-bordered { border: 1px solid #c5a85c20 !important; }
+        .table-bordered th, .table-bordered td { border: 1px solid #c5a85c10 !important; }
+        .table thead th { background-color: #060606; color: #c5a85c; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #c5a85c35 !important; font-size: 14px; padding: 14px 10px; }
+        .table-striped tbody tr:nth-of-type(odd) { background-color: #111111; }
+        .table-hover tbody tr:hover { background-color: #181818; }
+        
+        .card-counter { background: #0c0c0c; border: 1px solid #c5a85c25; padding: 22px; border-radius: 8px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .counter-icon { font-size: 32px; color: #c5a85c; opacity: 0.8; }
+        .counter-label { text-transform: uppercase; font-size: 12px; color: #888888; letter-spacing: 0.5px; display: block; }
+        .counter-number { display: block; font-weight: bold; font-size: 28px; color: #ffffff; margin-top: 5px; font-family: 'Courier New', Courier, monospace; }
+        .badge-gold { background-color: rgba(197, 168, 92, 0.1); color: #f5d77f; border: 1px solid #c5a85c30; font-size: 12px; padding: 6px 14px; border-radius: 20px; }
+
+        @media print {
+            body { background: white; color: black; }
+            #sidebar, .photo-box, .box:first-of-type, .btn-danger-custom, th:last-child, td:last-child, .row.mb-3 { display: none !important; }
+            #content { padding: 0; }
+            .box { border: 1px solid #000; box-shadow: none; background: white; }
+            .table thead th { background: #eee; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="sidebar-brand">
+            <div class="gold-svg-container">
+                <img src="logo.png" alt="Logo Công Binh" style="width: 95px; height: 95px; object-fit: contain;">
+            </div>
+            <h5>Kho Huấn Luyện</h5>
+        </div>
+        <ul class="list-unstyled components">
+            <li class="active"><a href="#"><i class="fas fa-th-large"></i> Bảng điều khiển</a></li>
+            <li><a href="#" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Xuất file Excel</a></li>
+            <li><a href="#" onclick="window.print()"><i class="fas fa-print"></i> In danh sách kho</a></li>
+            <li><a href="#" onclick="resetToDefault()"><i class="fas fa-history"></i> Cài lại dữ liệu gốc</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <div class="main-header">
+            <h2><i class="fas fa-shield-alt"></i> Hệ Thống Quản Lý Kho Huấn Luyện Của Đại Đội 17</h2>
+            <span class="badge badge-gold">Mô hình cao cấp v2.5</span>
+        </div>
+
+        <div class="photo-box">
+            <div class="photo-container">
+                <img src="kho huấn luyện.jpg" onerror="this.src='https://drive.google.com/file/d/1OUhrfzSS_Z0UqkGY3PQ7Np38AojCdqbC/view?usp=sharing'; this.style.opacity='0.4';" alt="Không gian kho huấn luyện thực tế">
+            </div>
+            <div class="photo-caption">
+                <i class="fas fa-camera"></i> Hình ảnh thực tế sắp xếp vật chất tại gian kho huấn luyện
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-counter">
+                    <div class="counter-info">
+                        <span class="counter-label">Số chủng loại danh mục</span>
+                        <span class="counter-number" id="summaryItems">0</span>
+                    </div>
+                    <div class="counter-icon"><i class="fas fa-clipboard-list"></i></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-counter">
+                    <div class="counter-info">
+                        <span class="counter-label">Tổng số lượng tồn vật chất</span>
+                        <span class="counter-number" id="summaryQty">0</span>
+                    </div>
+                    <div class="counter-icon"><i class="fas fa-boxes"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-header"><i class="fas fa-plus-circle"></i> Nhập thêm vật chất vào hệ thống kho</div>
+            <div class="row">
+                <div class="col-md-4 mb-3"><input type="text" id="pName" class="form-control" placeholder="Tên vật chất huấn luyện..."></div>
+                <div class="col-md-3 mb-3"><input type="text" id="pYear" class="form-control" placeholder="Năm Cấp (VD: 2024)"></div>
+                <div class="col-md-3 mb-3"><input type="number" id="pQty" class="form-control" placeholder="Số lượng thực tế"></div>
+                <div class="col-md-2 mb-3"><button class="btn btn-gold btn-block" onclick="addProduct()"><i class="fas fa-check-circle"></i> Lưu vào kho</button></div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-header"><i class="fas fa-layer-group"></i> Chi tiết bảng kiểm kê vật chất tồn kho</div>
+            <div class="row mb-3">
+                <div class="col-md-7 mb-2"><input type="text" id="searchBox" class="form-control" oninput="renderTable()" placeholder="Gõ tên vật chất quân sự cần tìm..."></div>
+                <div class="col-md-5 mb-2 text-right">
+                    <button class="btn btn-outline-gold mr-1" onclick="exportToExcel()"><i class="fas fa-download"></i> Tải Excel</button>
+                    <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> In bản giấy</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%">TT</th>
+                            <th>Tên Vật Chất Nhập Kho</th>
+                            <th style="width: 25%">Năm Cấp</th>
+                            <th style="width: 18%">Số Lượng</th>
+                            <th style="width: 12%">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable"></tbody>
+                </table>
+                <div id="emptyMessage" class="text-center text-muted my-4" style="display: none; font-style: italic;">Không tìm thấy tên vật chất phù hợp.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const defaultData = [
+        { name: "Nhà bạt", year: "2023", quantity: 1 }, { name: "Mặt nạ phòng hóa", year: "2018", quantity: 6 },
+        { name: "Bia số 6b", year: "2024", quantity: 3 }, { name: "Bia số 7d", year: "2024", quantity: 3 },
+        { name: "Bia số 8b", year: "2024", quantity: 3 }, { name: "Bia số 16", year: "2024", quantity: 3 },
+        { name: "Bia số 7c", year: "2024", quantity: 2 }, { name: "Bia số 8c", year: "2024", quantity: 2 },
+        { name: "Bia số 6", year: "2024", quantity: 6 }, { name: "Bia số 10", year: "2024", quantity: 6 },
+        { name: "Bia số 9", year: "2024", quantity: 2 }, { name: "Bia đâm lê", year: "2024", quantity: 2 },
+        { name: "Chùy", year: "2024", quantity: 2 }, { name: "Máy dò mìn", year: "2018", quantity: 8 },
+        { name: "Áo phao", year: "2023", quantity: 2 }, { name: "Phao bơi", year: "2023", quantity: 2 },
+        { name: "Lượng nổ 400g nhựa", year: "2023", quantity: 40 }, { name: "Lượng nổ 400g gỗ", year: "2023", quantity: 50 },
+        { name: "Lượng nổ 200g nhựa", year: "2023", quantity: 40 }, { name: "Lượng nổ 200g gỗ", year: "2023", quantity: 90 },
+        { name: "Lượng nổ 50g", year: "2023", quantity: 40 }, { name: "Lượng nổ 25g", year: "2023", quantity: 50 },
+        { name: "Nẹp lượng nổ dài", year: "2023", quantity: 10 }, { name: "Nẹp lượng nổ khối", year: "2023", quantity: 6 },
+        { name: "Mô hình cầu quân sự", year: "2023", quantity: 2 }, { name: "Mô hình chông", year: "2023", quantity: 1 },
+        { name: "Mô hình công sự SCH", year: "2023", quantity: 1 }, { name: "Mô hình công sự chữ A", year: "2023", quantity: 1 },
+        { name: "Mô hình hàng rào", year: "2023", quantity: 1 }, { name: "Mô hình bãi nổ thủ công", year: "2023", quantity: 1 },
+        { name: "Mô hình bãi nổ điện", year: "2024", quantity: 1 }, { name: "Mô hình bếp Hoàng Cầm", year: "2023", quantity: 1 },
+        { name: "Kíp huấn luyện", year: "2023", quantity: 50 }, { name: "Nụ xùy huấn luyện", year: "2023", quantity: 50 },
+        { name: "Bộc phá dài", year: "2023", quantity: 9 }, { name: "Bộc phá khối", year: "2023", quantity: 6 },
+        { name: "Mìn TM-46", year: "2023", quantity: 6 }, { name: "Mìn TM-57", year: "2023", quantity: 7 },
+        { name: "Mìn TM-62M", year: "2023", quantity: 2 }, { name: "Mìn M15", year: "2023", quantity: 10 },
+        { name: "Mìn POMZ-2", year: "2023", quantity: 3 }, { name: "Mìn OZM-72", year: "2023", quantity: 20 },
+        { name: "Mìn K-58", year: "2023", quantity: 6 }, { name: "Mìn K69", year: "2023", quantity: 1 },
+        { name: "Mìn M16A2", year: "2023", quantity: 10 }, { name: "Mìn DH-10", year: "2024", quantity: 4 },
+        { name: "Mìn MOH50", year: "2024", quantity: 1 }, { name: "Mô hình mìn POMZ-2 cắt bổ", year: "2023", quantity: 15 },
+        { name: "Mô hình mìn DH5 cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn M16-A2 cắt bổ", year: "2024", quantity: 2 },
+        { name: "Mô hình mìn K69 cắt bổ", year: "2024", quantity: 6 }, { name: "Mô hình mìn K58 cắt bổ", year: "2024", quantity: 2 },
+        { name: "Mô hình mìn TM-57 cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn DH-10 cắt bổ", year: "2024", quantity: 1 },
+        { name: "Mô hình mìn TM-62M cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn MB-01 cắt bổ", year: "2024", quantity: 3 },
+        { name: "Túi đựng mìn", year: "2024", quantity: 12 }, { name: "Máng bố trí mìn", year: "2023", quantity: 4 },
+        { name: "Guồng bố trí mìn", year: "2023", quantity: 4 }, { name: "Biển đánh dấu cửa mở", year: "2023", quantity: 6 },
+        { name: "Thuốn", year: "2023", quantity: 54 }, { name: "Cọc tuyến", year: "2023", quantity: 16 },
+        { name: "Cọc tiếp đầu", year: "2023", quantity: 39 }, { name: "Cọc gia lông", year: "2023", quantity: 23 },
+        { name: "Thước 3m", year: "2023", quantity: 6 }, { name: "Thước vuông góc", year: "2023", quantity: 6 },
+        { name: "Thước đo độ", year: "2023", quantity: 6 }, { name: "Thước đo độ dốc", year: "2023", quantity: 2 },
+        { name: "Cọc dấu", year: "2023", quantity: 100 }, { name: "Dùi đục", year: "2023", quantity: 10 },
+        { name: "Đà kê", year: "2023", quantity: 12 }, { name: "Vồ tay", year: "2023", quantity: 6 },
+        { name: "Mô hình phá vật thể", year: "2024", quantity: 1 }, { name: "Mô hình bố trí bãi nổ", year: "2024", quantity: 1 },
+        { name: "Biển bảng bãi nổ", year: "2023", quantity: 5 }, { name: "Giá dựng bia", year: "2023", quantity: 6 },
+        { name: "Giá tập điều lệnh", year: "2023", quantity: 9 }, { name: "Máy phát điều khiển nổ từ xa ĐKN 9.5", year: "2024", quantity: 4 }
+    ];
+
+    let inventory = JSON.parse(localStorage.getItem('finalMilitaryData')) || [...defaultData];
+
+    function renderTable() {
+        const tableBody = document.getElementById('inventoryTable');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const keyword = document.getElementById('searchBox').value.trim().toLowerCase();
+        tableBody.innerHTML = '';
+        
+        let filteredData = inventory.filter(item => item.name.toLowerCase().includes(keyword));
+        emptyMessage.style.display = filteredData.length === 0 ? 'block' : 'none';
+
+        filteredData.forEach((item, index) => {
+            const realIndex = inventory.findIndex(p => p.name === item.name && p.year === item.year);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td><strong style="color: #ffffff;">${item.name}</strong></td>
+                <td><span class="badge badge-gold">${item.year}</span></td>
+                <td style="color: #f5d77f; font-weight: bold;">${Number(item.quantity).toLocaleString('vi-VN')}</td>
+                <td><button class="btn btn-danger-custom btn-sm" onclick="deleteProduct(${realIndex})"><i class="fas fa-trash-alt"></i> Xóa</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+        document.getElementById('summaryItems').innerText = inventory.length;
+        document.getElementById('summaryQty').innerText = inventory.reduce((sum, item) => sum + Number(item.quantity), 0).toLocaleString('vi-VN');
+    }
+
+    function addProduct() {
+        const name = document.getElementById('pName').value.trim();
+        const year = document.getElementById('pYear').value.trim();
+        const quantity = document.getElementById('pQty').value;
+        if (!name || !year || !quantity) return alert('Vui lòng điền đủ thông tin!');
+        
+        const existing = inventory.find(item => item.name.toLowerCase() === name.toLowerCase() && item.year === year);
+        if (existing) existing.quantity += parseInt(quantity);
+        else inventory.push({ name, year, quantity: parseInt(quantity) });
+
+        localStorage.setItem('finalMilitaryData', JSON.stringify(inventory));
+        renderTable();
+        document.getElementById('pName').value = ''; document.getElementById('pYear').value = ''; document.getElementById('pQty').value = '';
+    }
+
+    function deleteProduct(index) {
+        if (confirm('Xác nhận xóa mục này?')) {
+            inventory.splice(index, 1);
+            localStorage.setItem('finalMilitaryData', JSON.stringify(inventory));
+            renderTable();
+        }
+    }
+
+    function exportToExcel() {
+        const excelData = inventory.map((item, index) => ({ 'TT': index + 1, 'TÊN VẬT CHẤT': item.name, 'NĂM SẢN XUẤT': item.year, 'SỐ LƯỢNG': item.quantity }));
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "VatChatHL");
+        XLSX.writeFile(workbook, "BaoCao_Kho_Huan_Luyen.xlsx");
+    }
+
+    function resetToDefault() {
+        if (confirm('Khôi phục danh sách gốc?')) {
+            inventory = [...defaultData];
+            localStorage.setItem('finalMilitaryData', JSON.stringify(inventory));
+            renderTable();
+        }
+    }
+    renderTable();
+</script>
+</body>
+</html>
