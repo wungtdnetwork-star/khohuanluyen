@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Lý Kho Huấn Luyện Của Đại Đội 17</title>
+    <title>Hệ Thống Quản Lý Kho Huấn Luyện Của Đại đội 17</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -100,7 +100,7 @@
 
     <div id="content">
         <div class="main-header">
-            <h2><i class="fas fa-shield-alt"></i> Hệ Thống Quản Lý Kho Huấn Luyện Của Đại Đội 17</h2>
+            <h2><i class="fas fa-shield-alt"></i> Hệ Thống Quản Lý Kho Huấn Luyện Của Đại đội 17</h2>
             <span class="badge badge-gold">Mô hình cao cấp v2.5</span>
         </div>
 
@@ -138,7 +138,7 @@
             <div class="box-header"><i class="fas fa-plus-circle"></i> Nhập thêm vật chất vào hệ thống kho</div>
             <div class="row">
                 <div class="col-md-4 mb-3"><input type="text" id="pName" class="form-control" placeholder="Tên vật chất huấn luyện..."></div>
-                <div class="col-md-3 mb-3"><input type="text" id="pYear" class="form-control" placeholder="Năm Cấp (VD: 2024)"></div>
+                <div class="col-md-3 mb-3"><input type="text" id="pYear" class="form-control" placeholder="Đơn vị tính (Cái, Bộ, Tấm...)"></div>
                 <div class="col-md-3 mb-3"><input type="number" id="pQty" class="form-control" placeholder="Số lượng thực tế"></div>
                 <div class="col-md-2 mb-3"><button class="btn btn-gold btn-block" onclick="addProduct()"><i class="fas fa-check-circle"></i> Lưu vào kho</button></div>
             </div>
@@ -160,7 +160,7 @@
                         <tr>
                             <th style="width: 8%">TT</th>
                             <th>Tên Vật Chất Nhập Kho</th>
-                            <th style="width: 25%">Năm Cấp</th>
+                            <th style="width: 25%">Đơn Vị Tính</th>
                             <th style="width: 18%">Số Lượng</th>
                             <th style="width: 12%">Thao Tác</th>
                         </tr>
@@ -175,47 +175,83 @@
 
 <script>
     const defaultData = [
-        { name: "Nhà bạt", year: "2023", quantity: 1 }, { name: "Mặt nạ phòng hóa", year: "2018", quantity: 6 },
-        { name: "Bia số 6b", year: "2024", quantity: 3 }, { name: "Bia số 7d", year: "2024", quantity: 3 },
-        { name: "Bia số 8b", year: "2024", quantity: 3 }, { name: "Bia số 16", year: "2024", quantity: 3 },
-        { name: "Bia số 7c", year: "2024", quantity: 2 }, { name: "Bia số 8c", year: "2024", quantity: 2 },
-        { name: "Bia số 6", year: "2024", quantity: 6 }, { name: "Bia số 10", year: "2024", quantity: 6 },
-        { name: "Bia số 9", year: "2024", quantity: 2 }, { name: "Bia đâm lê", year: "2024", quantity: 4 },
-        { name: "Chùy", year: "2024", quantity: 2 }, { name: "Máy dò mìn", year: "2018", quantity: 8 },
-        { name: "Áo phao", year: "2023", quantity: 23 }, { name: "Phao bơi", year: "2023", quantity: 26 },
-        { name: "Lượng nổ 400g nhựa", year: "2023", quantity: 40 }, { name: "Lượng nổ 400g gỗ", year: "2023", quantity: 50 },
-        { name: "Lượng nổ 200g nhựa", year: "2023", quantity: 40 }, { name: "Lượng nổ 200g gỗ", year: "2023", quantity: 90 },
-        { name: "Lượng nổ 50g", year: "2023", quantity: 40 }, { name: "Lượng nổ 25g", year: "2023", quantity: 50 },
-        { name: "Nẹp lượng nổ dài", year: "2023", quantity: 10 }, { name: "Nẹp lượng nổ khối", year: "2023", quantity: 6 },
-        { name: "Mô hình cầu quân sự", year: "2023", quantity: 2 }, { name: "Mô hình chông", year: "2023", quantity: 1 },
-        { name: "Mô hình công sự SCH", year: "2023", quantity: 1 }, { name: "Mô hình công sự chữ A", year: "2023", quantity: 1 },
-        { name: "Mô hình hàng rào", year: "2023", quantity: 1 }, { name: "Mô hình bãi nổ thủ công", year: "2023", quantity: 1 },
-        { name: "Mô hình bãi nổ điện", year: "2024", quantity: 1 }, { name: "Mô hình bếp Hoàng Cầm", year: "2023", quantity: 1 },
-        { name: "Kíp huấn luyện", year: "2023", quantity: 50 }, { name: "Nụ xùy huấn luyện", year: "2023", quantity: 50 },
-        { name: "Bộc phá dài", year: "2023", quantity: 9 }, { name: "Bộc phá khối", year: "2023", quantity: 6 },
-        { name: "Mìn TM-46", year: "2023", quantity: 6 }, { name: "Mìn TM-57", year: "2023", quantity: 7 },
-        { name: "Mìn TM-62M", year: "2023", quantity: 2 }, { name: "Mìn M15", year: "2023", quantity: 10 },
-        { name: "Mìn POMZ-2", year: "2023", quantity: 3 }, { name: "Mìn OZM-72", year: "2023", quantity: 20 },
-        { name: "Mìn K-58", year: "2023", quantity: 6 }, { name: "Mìn K69", year: "2023", quantity: 1 },
-        { name: "Mìn M16A2", year: "2023", quantity: 10 }, { name: "Mìn DH-10", year: "2024", quantity: 4 },
-        { name: "Mìn MOH50", year: "2024", quantity: 1 }, { name: "Mô hình mìn POMZ-2 cắt bổ", year: "2023", quantity: 15 },
-        { name: "Mô hình mìn DH5 cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn M16-A2 cắt bổ", year: "2024", quantity: 2 },
-        { name: "Mô hình mìn K69 cắt bổ", year: "2024", quantity: 6 }, { name: "Mô hình mìn K58 cắt bổ", year: "2024", quantity: 2 },
-        { name: "Mô hình mìn TM-57 cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn DH-10 cắt bổ", year: "2024", quantity: 1 },
-        { name: "Mô hình mìn TM-62M cắt bổ", year: "2024", quantity: 2 }, { name: "Mô hình mìn MB-01 cắt bổ", year: "2024", quantity: 3 },
-        { name: "Túi đựng mìn", year: "2024", quantity: 12 }, { name: "Máng bố trí mìn", year: "2023", quantity: 4 },
-        { name: "Guồng bố trí mìn", year: "2023", quantity: 4 }, { name: "Biển đánh dấu cửa mở", year: "2023", quantity: 6 },
-        { name: "Thuốn", year: "2023", quantity: 54 }, { name: "Cọc tuyến", year: "2023", quantity: 16 },
-        { name: "Cọc tiếp đầu", year: "2023", quantity: 60 }, { name: "Cọc gia lông", year: "2023", quantity: 23 },
-        { name: "Thước 3m", year: "2023", quantity: 6 }, { name: "Thước vuông góc", year: "2023", quantity: 6 },
-        { name: "Thước đo độ", year: "2023", quantity: 9 }, { name: "Thước đo độ dốc", year: "2023", quantity: 2 },
-        { name: "Cọc dấu", year: "2023", quantity: 60 }, { name: "Dùi đục", year: "2023", quantity: 10 },
-        { name: "Đà kê", year: "2023", quantity: 30 }, { name: "Vồ tay", year: "2023", quantity: 6 },
-        { name: "Mô hình phá vật thể", year: "2024", quantity: 1 }, { name: "Mô hình bố trí bãi nổ", year: "2024", quantity: 1 },
-        { name: "Biển bảng bãi nổ", year: "2023", quantity: 5 }, { name: "Giá dựng bia", year: "2023", quantity: 6 },
-        { name: "Giá tập điều lệnh", year: "2023", quantity: 9 }, { name: "Máy phát điều khiển nổ từ xa ĐKN 9.5", year: "2024", quantity: 4 }
-    ];
-
+  { name: "Bảng huấn luyện", unit: "Cái", quantity: 1 },
+  { name: "Bánh thuốc nổ 200g", unit: "Bánh", quantity: 76 },
+  { name: "Bánh thuốc nổ 400g", unit: "Bánh", quantity: 118 },
+  { name: "Bia đâm lê", unit: "Cái", quantity: 4 },
+  { name: "Bia số 10", unit: "Cái", quantity: 4 },
+  { name: "Bia số 16", unit: "Cái", quantity: 3 },
+  { name: "Bia số 6b", unit: "Cái", quantity: 7 },
+  { name: "Bia số 6d", unit: "Cái", quantity: 7 },
+  { name: "Bia số 7b", unit: "Cái", quantity: 3 },
+  { name: "Bia số 7c", unit: "Cái", quantity: 5 },
+  { name: "Bia số 7d", unit: "Cái", quantity: 4 },
+  { name: "Bia số 8b", unit: "Cái", quantity: 4 },
+  { name: "Bia số 8c", unit: "Cái", quantity: 3 },
+  { name: "Bia số 8d", unit: "Cái", quantity: 3 },
+  { name: "Bia số 9", unit: "Cái", quantity: 3 },
+  { name: "Biển bảng", unit: "Cái", quantity: 71 },
+  { name: "Biển điểm tập đêm", unit: "Cái", quantity: 3 },
+  { name: "Cần câu", unit: "Cái", quantity: 44 },
+  { name: "Cọc tiếp đầu", unit: "Cái", quantity: 65 },
+  { name: "Cọc dấu", unit: "Cái", quantity: 95 },
+  { name: "Cọc ghim dây", unit: "Cái", quantity: 12 },
+  { name: "Cọc gia lông", unit: "Cái", quantity: 46 },
+  { name: "Cờ đuôi nhéo đỏ", unit: "Cái", quantity: 20 },
+  { name: "Cờ đuôi nhéo trắng", unit: "Cái", quantity: 19 },
+  { name: "Chuỳ đánh báng", unit: "Cái", quantity: 2 },
+  { name: "Dây chuẩn trắng đen", unit: "Cuộn", quantity: 4 },
+  { name: "Dây điện", unit: "Cuộn", quantity: 6 },
+  { name: "Dùi đục", unit: "Cái", quantity: 25 },
+  { name: "Đà kê", unit: "Cái", quantity: 35 },
+  { name: "Đèn chỉ huy", unit: "Cái", quantity: 2 },
+  { name: "Đèn đội đầu", unit: "Cái", quantity: 40 },
+  { name: "Đèn vật chuẩn", unit: "Cái", quantity: 3 },
+  { name: "Guồng phá nổ", unit: "Cái", quantity: 6 },
+  { name: "Giá cuốc xẻng", unit: "Cái", quantity: 4 },
+  { name: "Giá súng", unit: "Cái", quantity: 1 },
+  { name: "Giá treo tranh", unit: "Cái", quantity: 1 },
+  { name: "Hộp huấn luyện KTCĐBB", unit: "Cái", quantity: 2 },
+  { name: "Khay đựng thuốc nổ", unit: "Cái", quantity: 26 },
+  { name: "Lộ tiêu", unit: "Cái", quantity: 47 },
+  { name: "Lượng nổ dài", unit: "Cái", quantity: 18 },
+  { name: "Lượng nổ khối", unit: "Cái", quantity: 11 },
+  { name: "Máng bố trí mìn", unit: "Cái", quantity: 16 },
+  { name: "Máy dò mìn", unit: "Cái", quantity: 1 },
+  { name: "Máy gây nổ ĐKN 9.5", unit: "Cái", quantity: 4 },
+  { name: "Mặt nạ phòng độc", unit: "Cái", quantity: 10 },
+  { name: "Mìn chống bộ binh", unit: "Cái", quantity: 83 },
+  { name: "Mìn chống bộ binh cắt bổ", unit: "Cái", quantity: 12 },
+  { name: "Mìn chống tăng", unit: "Cái", quantity: 54 },
+  { name: "Mìn chống tăng cắt bổ", unit: "Cái", quantity: 5 },
+  { name: "Mìn DH-20", unit: "Cái", quantity: 2 },
+  { name: "Mỏ quay", unit: "Cái", quantity: 2 },
+  { name: "Mô hình cầu gỗ", unit: "Cái", quantity: 2 },
+  { name: "Mô hình công sự chữ A", unit: "Cái", quantity: 1 },
+  { name: "Mô hình hàng rào", unit: "Cái", quantity: 1 },
+  { name: "Mô hình SCH", unit: "Cái", quantity: 1 },
+  { name: "Nạng chống thép gai", unit: "Cái", quantity: 12 },
+  { name: "Nẹp điều lệnh", unit: "Cái", quantity: 64 },
+  { name: "Nẹp lượng nổ dài", unit: "Cái", quantity: 10 },
+  { name: "Nẹp lượng nổ khối", unit: "Cái", quantity: 6 },
+  { name: "Ngòi nổ", unit: "Cái", quantity: 29 },
+  { name: "Ôm kế", unit: "Cái", quantity: 24 },
+  { name: "Phao tròn", unit: "Cái", quantity: 26 },
+  { name: "Tủ cá nhân", unit: "Cái", quantity: 3 },
+  { name: "Túi dò mìn", unit: "Cái", quantity: 11 },
+  { name: "Túi đựng", unit: "Cái", quantity: 21 },
+  { name: "Thuốn", unit: "Cái", quantity: 16 },
+  { name: "Thuốn dài", unit: "Cái", quantity: 25 },
+  { name: "Thuốn ngắn", unit: "Cái", quantity: 33 },
+  { name: "Thước 3m", unit: "Cái", quantity: 6 },
+  { name: "Thước đo độ", unit: "Cái", quantity: 9 },
+  { name: "Thước đo độ dốc", unit: "Cái", quantity: 6 },
+  { name: "Thước vuông góc", unit: "Cái", quantity: 7 },
+  { name: "Thiết bị điều khiển nổ từ xa", unit: "Cái", quantity: 1 },
+  { name: "Vồ", unit: "Cái", quantity: 7 },
+  { name: "Ắc quy", unit: "Cái", quantity: 10 },
+  { name: "Áo phao", unit: "Cái", quantity: 22 }
+];
     let inventory = JSON.parse(localStorage.getItem('finalMilitaryData')) || [...defaultData];
 
     function renderTable() {
@@ -228,12 +264,12 @@
         emptyMessage.style.display = filteredData.length === 0 ? 'block' : 'none';
 
         filteredData.forEach((item, index) => {
-            const realIndex = inventory.findIndex(p => p.name === item.name && p.year === item.year);
+            const realIndex = inventory.findIndex(p => p.name === item.name && p.unit === item.unit);
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td><strong style="color: #ffffff;">${item.name}</strong></td>
-                <td><span class="badge badge-gold">${item.year}</span></td>
+                <td><span class="badge badge-gold">${item.unit}</span></td>
                 <td style="color: #f5d77f; font-weight: bold;">${Number(item.quantity).toLocaleString('vi-VN')}</td>
                 <td><button class="btn btn-danger-custom btn-sm" onclick="deleteProduct(${realIndex})"><i class="fas fa-trash-alt"></i> Xóa</button></td>
             `;
@@ -245,13 +281,13 @@
 
     function addProduct() {
         const name = document.getElementById('pName').value.trim();
-        const year = document.getElementById('pYear').value.trim();
+        const unit = document.getElementById('pYear').value.trim();
         const quantity = document.getElementById('pQty').value;
-        if (!name || !year || !quantity) return alert('Vui lòng điền đủ thông tin!');
+        if (!name || !unit || !quantity) return alert('Vui lòng điền đủ thông tin!');
         
-        const existing = inventory.find(item => item.name.toLowerCase() === name.toLowerCase() && item.year === year);
+        const existing = inventory.find(item => item.name.toLowerCase() === name.toLowerCase() && item.unit === unit);
         if (existing) existing.quantity += parseInt(quantity);
-        else inventory.push({ name, year, quantity: parseInt(quantity) });
+        else inventory.push({ name, unit, quantity: parseInt(quantity) });
 
         localStorage.setItem('finalMilitaryData', JSON.stringify(inventory));
         renderTable();
@@ -267,7 +303,7 @@
     }
 
     function exportToExcel() {
-        const excelData = inventory.map((item, index) => ({ 'TT': index + 1, 'TÊN VẬT CHẤT': item.name, 'NĂM SẢN XUẤT': item.year, 'SỐ LƯỢNG': item.quantity }));
+        const excelData = inventory.map((item, index) => ({ 'TT': index + 1, 'TÊN VẬT CHẤT': item.name, 'ĐƠN VỊ TÍNH': item.unit, 'SỐ LƯỢNG': item.quantity }));
         const worksheet = XLSX.utils.json_to_sheet(excelData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "VatChatHL");
